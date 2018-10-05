@@ -36,21 +36,21 @@ func main() {
 }
 ```
 
-### configuration
+### Configuration
 
 * Print JSON logs, default is concise human readable format.
 	* `log.JSON()`
-* Change minimum log level to be published
+* Change minimum log level to be published.
 	* `log.SetLevel(log.InfoLevel)`
-	* Levels in increasing order `Debug`, `Info`, `Warn`, `Error`, and `Fatal`.
-* Change maximum log verbosity to be published
+	* Increasing order of levels is `DebugLevel`, `InfoLevel`, `WarnLevel`, `ErrorLevel`, and `FatalLevel`.
+* Change maximum log verbosity to be published.
 	* `log.SetVerbosity(2)`
 
-### verbosity?
+### Verbosity?
 
 Each log line has an associated verbosity - a positive interger, `0` by default. By setting `global log verbosity`, only logs with verbosity less than or equal to the global verbosity are published. Assigning higher verbosity to more detailed logs helps control log volume.
 
-### why defer?
+### Why defer?
 
 This log publishing library may be used to push logs to a log server (or stdout), `defer Flush()` enables cleanly pushing logs over network even in case of panic, while maintaining lightining fast speeds.
 
