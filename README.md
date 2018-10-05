@@ -43,12 +43,12 @@ func main() {
 * Change minimum log level to be published.
 	* `log.SetLevel(log.InfoLevel)`
 	* Increasing order of levels is `DebugLevel`, `InfoLevel`, `WarnLevel`, `ErrorLevel`, and `FatalLevel`.
-* Change maximum log verbosity to be published.
+* Change maximum log verbosity to be published, by setting global verbosity.
 	* `log.SetVerbosity(2)`
 
 ### Verbosity?
 
-Each log line has an associated verbosity - a positive interger, `0` by default. By setting `global log verbosity`, only logs with verbosity less than or equal to the global verbosity are published. Assigning higher verbosity to more detailed logs helps control log volume.
+Each log line has an associated verbosity - a positive interger, `0` by default. Logs with verbosity greater than the `global verbosity` are not published. Default global verbosity is `0`. Assigning higher verbosity to more detailed logs helps control log volume.
 
 ### Why defer?
 
