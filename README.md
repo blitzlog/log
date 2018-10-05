@@ -36,7 +36,7 @@ func main() {
 }
 ```
 
-### Configuration
+### configuration
 
 * Print JSON logs, default is concise human readable format.
 	* `log.JSON()`
