@@ -9,7 +9,7 @@ import (
 	"github.com/blitzlog/log"
 )
 
-const v = "some data"
+const v = "value"
 
 func main() {
     defer log.Flush()                                       // flush logs before exit
@@ -18,7 +18,7 @@ func main() {
 
     log.I("an info log")                                    // basic info log
 
-    log.D("add data: %s", data)                             // formatted log
+    log.D("add data: %s", v)                                // formatted log
 
     log.With(log.Tags{"tag": "value"}).W("tagged  log")     // add tags to log
 
