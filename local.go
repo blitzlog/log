@@ -14,7 +14,7 @@ func local() {
 		case l.conf.logJson:
 			fmt.Println(jsonFormat(lg))
 		default:
-			fmt.Println(format(lg))
+			fmt.Println(Format(lg))
 		}
 		l.wg.Done()
 	}
@@ -22,7 +22,7 @@ func local() {
 
 // format log as:
 // TMMDD HH:MM:SS.sss file:line <msg> <k1=v1 k2=v2>
-func format(lg *log.Log) string {
+func Format(lg *log.Log) string {
 
 	var buf []byte
 
