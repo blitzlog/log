@@ -12,7 +12,7 @@ func local() {
 
 		switch {
 		case l.conf.logJson:
-			fmt.Println(jsonFormat(lg))
+			fmt.Println(JsonFormat(lg))
 		default:
 			fmt.Println(Format(lg))
 		}
@@ -27,6 +27,8 @@ func Format(lg *log.Log) string {
 	var buf []byte
 
 	switch lg.Level {
+	case log.Level_none:
+		buf = []byte("R")
 	case log.Level_debug:
 		buf = []byte("D")
 	case log.Level_info:
@@ -42,11 +44,15 @@ func Format(lg *log.Log) string {
 	ts := time.Unix(0, lg.GetTimestamp()*int64(time.Millisecond)).Format("0102 15:04:05.000")
 	buf = append(buf, []byte(ts)...)
 	buf = append(buf, []byte(" ")...)
-	buf = append(buf, []byte(lg.GetFile())...)
-	buf = append(buf, []byte(":")...)
-	buf = append(buf, []byte(fmt.Sprintf("%d", lg.GetLine()))...)
-	buf = append(buf, []byte(" ")...)
-	buf = append(buf, []byte(lg.GetMsg())...)
+	if lg.Level == log.Level_none {
+		buf = append(buf, []byte(lg.GetRaw())...)
+	} else {
+		buf = append(buf, []byte(lg.GetFile())...)
+		buf = append(buf, []byte(":")...)
+		buf = append(buf, []byte(fmt.Sprintf("%d", lg.GetLine()))...)
+		buf = append(buf, []byte(" ")...)
+		buf = append(buf, []byte(lg.GetMsg())...)
+	}
 	tags := lg.GetTags()
 	for k, v := range tags {
 		buf = append(buf, fmt.Sprintf(" %s=%s", k, v)...)
@@ -55,13 +61,15 @@ func Format(lg *log.Log) string {
 	return string(buf)
 }
 
-// jsonFormat log.
-func jsonFormat(lg *log.Log) string {
+// JsonFormat log.
+func JsonFormat(lg *log.Log) string {
 
 	buf := []byte("{")
 
 	// TODO: use String()
 	switch lg.Level {
+	case log.Level_none:
+		buf = append(buf, []byte("\"type\":\"raw\"")...)
 	case log.Level_debug:
 		buf = append(buf, []byte("\"type\":\"debug\"")...)
 	case log.Level_info:
@@ -77,13 +85,19 @@ func jsonFormat(lg *log.Log) string {
 	ts := time.Unix(0, lg.GetTimestamp()*int64(time.Millisecond)).Format("2006-01-02 15:04:05.000")
 	tsStr := fmt.Sprintf(", \"timestamp\":\"%s\"", ts)
 	buf = append(buf, []byte(tsStr)...)
-	buf = append(buf, []byte(", \"file\":\"")...)
-	buf = append(buf, []byte(lg.GetFile())...)
-	buf = append(buf, []byte("\", \"line\":")...)
-	buf = append(buf, []byte(fmt.Sprintf("%d", lg.GetLine()))...)
-	buf = append(buf, []byte(", \"msg\":\"")...)
-	buf = append(buf, []byte(lg.GetMsg())...)
-	buf = append(buf, []byte("\"")...)
+	if lg.Level == log.Level_none {
+		buf = append(buf, []byte(", \"raw\":\"")...)
+		buf = append(buf, []byte(lg.GetRaw())...)
+		buf = append(buf, []byte("\"")...)
+	} else {
+		buf = append(buf, []byte(", \"file\":\"")...)
+		buf = append(buf, []byte(lg.GetFile())...)
+		buf = append(buf, []byte("\", \"line\":")...)
+		buf = append(buf, []byte(fmt.Sprintf("%d", lg.GetLine()))...)
+		buf = append(buf, []byte(", \"msg\":\"")...)
+		buf = append(buf, []byte(lg.GetMsg())...)
+		buf = append(buf, []byte("\"")...)
+	}
 	tags := lg.GetTags()
 	if len(tags) != 0 {
 		buf = append(buf, []byte(", \"tags\":{")...)
