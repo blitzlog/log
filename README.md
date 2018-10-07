@@ -40,10 +40,10 @@ func main() {
 
 * Print JSON logs, default is concise human readable format.
 	* `log.JSON()`
-* Change minimum log level to be published.
-	* `log.SetLevel(log.InfoLevel)`
-	* Increasing order of levels is `DebugLevel`, `InfoLevel`, `WarnLevel`, `ErrorLevel`, and `FatalLevel`.
-* Change maximum log verbosity to be published, by setting global verbosity.
+* Set minimum log level to be published.
+	* `log.SetLevel(log.LevelInfo)`
+	* Log levels in increasing order of severity is `LevelDebug`, `LevelInfo`, `LevelWarn`, `LevelError`, and `LevelFatal`.
+* Set maximum log verbosity to be published.
 	* `log.SetVerbosity(2)`
 
 ### Verbosity?
