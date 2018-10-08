@@ -64,7 +64,7 @@ func sender() {
 					continue
 				}
 				pause--
-			case lg := <-edgeChannel:
+			case lg := <-l.edgeChannel:
 				lgs = append(lgs, lg)
 			}
 		}
@@ -80,7 +80,7 @@ func createFlushChannel() chan bool {
 			select {
 			case <-flushTick.C:
 				fchan <- true
-			case <-flushChannel:
+			case <-l.flushChannel:
 				fchan <- true
 			}
 		}
@@ -245,9 +245,9 @@ func sendLogs(logClient edge.Edge_PostLogsClient, token string,
 	metrics := &edge.Metrics{
 		Latency:          latency,
 		ErrCount:         errCount,
-		LogChannelSize:   int32(len(logChannel)),
-		EdgeChannelSize:  int32(len(edgeChannel)),
-		LocalChannelSize: int32(len(localChannel)),
+		LogChannelSize:   int32(len(l.logChannel)),
+		EdgeChannelSize:  int32(len(l.edgeChannel)),
+		LocalChannelSize: int32(len(l.localChannel)),
 	}
 
 	// create post logs request

@@ -22,7 +22,7 @@ func Flush() {
 		if r != nil {
 			stack := debug.Stack()
 			l.wg.Add(1)
-			logChannel <- &log.Log{
+			l.logChannel <- &log.Log{
 				Timestamp: time.Now().UTC().UnixNano() / 1e6,
 				Raw:       fmt.Sprintf("%s\n%s", r, stack),
 			}
@@ -31,7 +31,7 @@ func Flush() {
 
 	// flush logs
 	time.Sleep(time.Millisecond)
-	flushChannel <- true
+	l.flushChannel <- true
 
 	// wait to process all logs
 	l.wg.Wait()

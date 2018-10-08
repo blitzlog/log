@@ -3,6 +3,8 @@ package log
 import (
 	"os"
 	"sync"
+
+	"github.com/blitzlog/proto/log"
 )
 
 const version = "0.0.0"
@@ -13,16 +15,26 @@ func init() {
 	l.conf = defaultConfig()
 	l.errFile, _ = os.Create("/tmp/blitz.log")
 
+	// init channels
+	l.logChannel = make(chan *log.Log, 1000)
+	l.edgeChannel = make(chan *log.Log, 1000)
+	l.localChannel = make(chan *log.Log, 1000)
+	l.flushChannel = make(chan bool, 1)
+
 	go local() // start local service
 	go mux()   // start multiplexer
 }
 
 type logging struct {
-	conf    *config
-	wg      sync.WaitGroup
-	stdout  *os.File
-	errFile *os.File
-	tags    *tags
+	conf         *config
+	wg           sync.WaitGroup
+	stdout       *os.File
+	errFile      *os.File
+	tags         *tags
+	logChannel   chan *log.Log // input log channel
+	edgeChannel  chan *log.Log // channel to push logs to edge
+	localChannel chan *log.Log // channel to publish logs locally
+	flushChannel chan bool     // channel to flush logs
 }
 
 var l logging

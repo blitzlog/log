@@ -28,7 +28,7 @@ func redirect() {
 				l.errFile.WriteString(err.Error())
 			}
 			l.wg.Add(1)
-			logChannel <- &log.Log{
+			l.logChannel <- &log.Log{
 				Timestamp: time.Now().UTC().UnixNano() / 1e6,
 				Raw:       strings.TrimSpace(line),
 			}

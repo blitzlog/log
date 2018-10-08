@@ -8,7 +8,7 @@ import (
 )
 
 func local() {
-	for lg := range localChannel {
+	for lg := range l.localChannel {
 
 		switch {
 		case l.conf.logJson:

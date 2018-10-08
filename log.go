@@ -268,7 +268,7 @@ func pushLog(verbosity *Verbosity, level log.Level, tags Tags,
 	// get location info for the log
 	file, function, line := fileLine(3)
 
-	logChannel <- &log.Log{
+	l.logChannel <- &log.Log{
 		File:      file,
 		Line:      int32(line),
 		Function:  function,
