@@ -11,7 +11,8 @@ import (
 // Flush all logs sent so far.
 func Flush() {
 
-	// sleep to flush all stdout logs
+	// flush stdout
+	time.Sleep(time.Millisecond)
 	l.stdout.Sync()
 
 	// if we are emitting logs, then get stack trace
@@ -27,6 +28,10 @@ func Flush() {
 			}
 		}
 	}
+
+	// flush logs
+	time.Sleep(time.Millisecond)
+	flushChannel <- true
 
 	// wait to process all logs
 	l.wg.Wait()

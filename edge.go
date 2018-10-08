@@ -51,15 +51,14 @@ func sender() {
 	// initialize pause counter
 	var pause int
 
-	// initialize flush ticker
-	flushDuration := time.Second
-	flushTick := time.NewTicker(flushDuration)
+	// create flush channel
+	fchan := createFlushChannel()
 
 	// accumulate and send logs
 	go func() {
 		for {
 			select {
-			case <-flushTick.C:
+			case <-fchan:
 				if pause == 0 {
 					lgs, pause = tx.send(lgs)
 					continue
@@ -70,6 +69,23 @@ func sender() {
 			}
 		}
 	}()
+}
+
+func createFlushChannel() chan bool {
+	fchan := make(chan bool)
+	flushDuration := time.Second
+	flushTick := time.NewTicker(flushDuration)
+	go func() {
+		for {
+			select {
+			case <-flushTick.C:
+				fchan <- true
+			case <-flushChannel:
+				fchan <- true
+			}
+		}
+	}()
+	return fchan
 }
 
 // send logs to edge client, with exponential backtracking in case of failures.

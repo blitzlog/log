@@ -9,6 +9,7 @@ var (
 	logChannel   = make(chan *log.Log, 1000) // input log channel
 	edgeChannel  = make(chan *log.Log, 1000) // channel to push logs to edge
 	localChannel = make(chan *log.Log, 1000) // channel to publish logs locally
+	flushChannel = make(chan bool, 1)        // channel to flush logs
 )
 
 // mux send logs on multiple channels based on config.
