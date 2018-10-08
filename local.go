@@ -12,9 +12,9 @@ func local() {
 
 		switch {
 		case l.conf.logJson:
-			fmt.Println(JsonFormat(lg))
+			fmt.Fprintln(l.stdout, JsonFormat(lg))
 		default:
-			fmt.Println(Format(lg))
+			fmt.Fprintln(l.stdout, Format(lg))
 		}
 		l.wg.Done()
 	}

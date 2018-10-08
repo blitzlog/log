@@ -14,6 +14,7 @@ func init() {
 	l.tags = newTags()
 	l.conf = defaultConfig()
 	l.errFile, _ = os.Create("/tmp/blitz.log")
+	l.stdout = os.Stdout
 
 	// init channels
 	l.logChannel = make(chan *log.Log, 1000)
