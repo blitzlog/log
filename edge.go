@@ -8,6 +8,7 @@ import (
 	"crypto/x509"
 	"fmt"
 	"net"
+	"net/http"
 	"time"
 
 	"github.com/blitzlog/errors"
@@ -268,7 +269,7 @@ func sendLogs(logClient edge.Edge_PostLogsClient, token string,
 		return latency, errors.Wrap(err, "response error")
 	}
 
-	if resp.Code != 200 {
+	if resp.Code != http.StatusOK {
 		return latency, errors.New("grpc response: %d", resp.Code)
 	}
 
@@ -394,8 +395,13 @@ func getToken(c edge.EdgeClient, keyId string) (string, error) {
 		return "", errors.Wrap(err, "error authenticating")
 	}
 
-	if authResponse.Code != 200 {
+	if authResponse.Code == http.StatusUnauthorized {
+		l.conf.apiError = true
 		return "", errors.New("unauthorized request")
+	}
+
+	if authResponse.Code != http.StatusOK {
+		return "", errors.New("unexpected response")
 	}
 
 	return authResponse.GetTokenId(), nil
