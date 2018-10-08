@@ -16,8 +16,8 @@ func Flush() {
 	l.stdout.Sync()
 
 	// if we are emitting logs, then get stack trace
-	logLocal := l.conf.apiKey == "" || l.conf.apiError
-	if !logLocal {
+	onlyLocal := l.conf.apiKey == "" || l.conf.apiError
+	if !onlyLocal {
 		r := recover()
 		if r != nil {
 			stack := debug.Stack()

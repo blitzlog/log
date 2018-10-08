@@ -10,6 +10,7 @@ type config struct {
 	logLevel     log.Level // current log type
 	logVerbosity int32     // current log level
 	logJson      bool      // log as json
+	logLocal     bool      // log to stdout
 	apiKey       string    // API Key
 	apiError     bool      // API Key is incorrect
 }
@@ -20,12 +21,15 @@ func defaultConfig() *config {
 
 func SetAPIKey(key string) {
 	l.conf.apiKey = key
-	redirect()
 	sender()
 }
 
 func JSON() {
 	l.conf.logJson = true
+}
+
+func Local() {
+	l.conf.logLocal = true
 }
 
 func String(i interface{}) string {

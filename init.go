@@ -24,6 +24,7 @@ func init() {
 
 	go local() // start local service
 	go mux()   // start multiplexer
+	redirect() // redirect logs from stdout
 }
 
 type logging struct {
