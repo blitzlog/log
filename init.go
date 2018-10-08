@@ -20,6 +20,7 @@ func init() {
 type logging struct {
 	conf    *config
 	wg      sync.WaitGroup
+	stdout  *os.File
 	errFile *os.File
 	tags    *tags
 }

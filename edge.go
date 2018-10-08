@@ -77,11 +77,6 @@ func (tx *Tx) send(lgs []*log.Log) ([]*log.Log, int) {
 
 	defer func() {
 		l.errFile.Sync()
-		//l.errFile.WriteString(fmt.Sprintf("DEBUG: send errCount  : %d\n", tx.errCount))
-		//l.errFile.WriteString(fmt.Sprintf("DEBUG: send retryCount: %d\n", tx.retryCount))
-		//l.errFile.WriteString(fmt.Sprintf("DEBUG: send edgeClient: %v\n", tx.edgeClient))
-		//l.errFile.WriteString(fmt.Sprintf("DEBUG: send token     : %s\n", tx.token))
-		//l.errFile.WriteString(fmt.Sprintf("DEBUG: send logClient : %v\n", tx.logClient))
 	}()
 
 	var err error

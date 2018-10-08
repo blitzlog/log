@@ -11,6 +11,10 @@ import (
 
 // redirect stdout to log channel.
 func redirect() {
+
+	// copy stdout
+	l.stdout = os.Stdout
+
 	r, w, err := os.Pipe()
 	if err != nil {
 		panic(err)
