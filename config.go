@@ -13,14 +13,32 @@ type config struct {
 	logLocal     bool      // log to stdout
 	apiKey       string    // API Key
 	apiError     bool      // API Key is incorrect
+	edgeAddress  string    // Edge address
+	edgeCert     string    // Certificate to authenticate edge
 }
 
 func defaultConfig() *config {
-	return &config{}
+	return &config{
+		edgeAddress: defaultEdgeAddress,
+		edgeCert:    defaultEdgeCert,
+	}
 }
 
-func SetAPIKey(key string) {
+func SetAPIKey(key string, args ...string) {
+	// set api key
 	l.conf.apiKey = key
+
+	// second arg is edge address
+	if len(args) >= 1 {
+		l.conf.edgeAddress = args[0]
+	}
+
+	// third ard is edge cert
+	if len(args) >= 2 {
+		l.conf.edgeCert = args[1]
+	}
+
+	// send logs to edge
 	sender()
 }
 

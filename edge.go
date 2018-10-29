@@ -18,8 +18,8 @@ import (
 	"google.golang.org/grpc/credentials"
 )
 
-// server address
-const address = "test.blitzlog.com:8089"
+// default edge address
+const defaultEdgeAddress = "test.blitzlog.com:8089"
 
 // retryLimit at each step when sending logs to edge server.
 const retryLimit = 4
@@ -40,7 +40,11 @@ func NewTx() *Tx {
 	return &Tx{logMap: make(map[string]int32)}
 }
 
-// sender reads messages from senderChannel and sends to edge server.
+// sender daemon
+// - creates a transmitter that sends messages to edge server
+// - aggregates logs coming over edge channel
+// - periodically sends aggregated logs to edge server (via created tx)
+// - handles request to flush all logs immediately
 func sender() {
 
 	// create new transmitter
@@ -318,7 +322,7 @@ func getLookupKey(logKey *log.LogKey) string {
 // getCredentials uses hardcoded certificate to create TLS credentials
 // that would be used to connect to edge server.
 func getCredentials() (credentials.TransportCredentials, error) {
-	b := []byte(serverCert)
+	b := []byte(l.conf.edgeCert)
 	cp := x509.NewCertPool()
 	if !cp.AppendCertsFromPEM(b) {
 		return nil, fmt.Errorf("credentials: failed to append certificates")
@@ -337,7 +341,7 @@ func getEdgeClient() (edge.EdgeClient, error) {
 		return nil, errors.Wrap(err, "error getting credentials")
 	}
 
-	conn, err := grpc.Dial(address, grpc.WithTransportCredentials(creds))
+	conn, err := grpc.Dial(l.conf.edgeAddress, grpc.WithTransportCredentials(creds))
 	if err != nil {
 		return nil, errors.Wrap(err, "error dialing to server")
 	}
@@ -379,7 +383,7 @@ func debugConn() (*grpc.ClientConn, error) {
 		grpc.WithInsecure(), //dialer handles TLS
 	)
 
-	return grpc.Dial(address, opts...)
+	return grpc.Dial(l.conf.edgeAddress, opts...)
 }
 
 // getToken uses API key to get a token from edge server.
