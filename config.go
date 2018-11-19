@@ -13,14 +13,15 @@ type config struct {
 	logLocal     bool      // log to stdout
 	apiKey       string    // API Key
 	apiError     bool      // API Key is incorrect
-	edgeAddress  string    // Edge address
-	edgeCert     string    // Certificate to authenticate edge
+	edgeAddress  string    // edge address
+	edgeCert     string    // certificate to authenticate edge
 }
 
 func defaultConfig() *config {
 	return &config{
 		edgeAddress: defaultEdgeAddress,
 		edgeCert:    defaultEdgeCert,
+		logLocal:    true,
 	}
 }
 
