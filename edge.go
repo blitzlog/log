@@ -248,11 +248,9 @@ func sendLogs(logClient edge.Edge_PostLogsClient, token string,
 
 	// create edge metrics
 	metrics := &edge.Metrics{
-		Latency:          latency,
-		ErrCount:         errCount,
-		LogChannelSize:   int32(len(l.logChannel)),
-		EdgeChannelSize:  int32(len(l.edgeChannel)),
-		LocalChannelSize: int32(len(l.localChannel)),
+		Latency:         latency,
+		ErrCount:        errCount,
+		EdgeChannelSize: int32(len(l.edgeChannel)),
 	}
 
 	// create post logs request

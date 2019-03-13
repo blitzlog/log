@@ -1,24 +1,23 @@
 package log
 
-// mux send logs on multiple channels based on config.
-func mux() {
-	for lg := range l.logChannel {
+import (
+	"github.com/blitzlog/proto/log"
+)
 
-		// only local if API key not set, or there is an API error
-		onlyLocal := l.conf.apiKey == "" || l.conf.apiError
+// mux log to local and/or edge.
+func mux(lg *log.Log) {
 
-		// only edge if not log local and log.Local() not specified
-		onlyEdge := !onlyLocal && !l.conf.logLocal
+	// log local if
+	// - API key not set
+	// - config set to log local
+	// - error sending log to edge
+	if l.conf.apiKey == "" || l.conf.logLocal || l.conf.apiError {
+		logLocal(lg)
+	}
 
-		switch {
-		case onlyLocal:
-			l.localChannel <- lg
-		case onlyEdge:
-			l.edgeChannel <- lg
-		default:
-			l.wg.Add(1)
-			l.localChannel <- lg
-			l.edgeChannel <- lg
-		}
+	// log edge if api key is set and no errors sending to edge.
+	if l.conf.apiKey != "" && !l.conf.apiError {
+		l.wg.Add(1)
+		l.edgeChannel <- lg
 	}
 }

@@ -262,13 +262,10 @@ func pushLog(verbosity *Verbosity, level log.Level, tags Tags,
 		return
 	}
 
-	// increment wait group
-	l.wg.Add(1)
-
 	// get location info for the log
 	file, function, line := fileLine(3)
 
-	l.logChannel <- &log.Log{
+	mux(&log.Log{
 		File:      file,
 		Line:      int32(line),
 		Function:  function,
@@ -277,7 +274,7 @@ func pushLog(verbosity *Verbosity, level log.Level, tags Tags,
 		Verbosity: int32(*verbosity),
 		Msg:       fmt.Sprintf(format, args...),
 		Tags:      tags.stringTags(),
-	}
+	})
 	if level == log.Level_fatal {
 		Flush()
 		panic(fmt.Sprintf(format, args...))

@@ -7,17 +7,12 @@ import (
 	"github.com/blitzlog/proto/log"
 )
 
-func local() {
-	for lg := range l.localChannel {
-
-		switch {
-		case l.conf.logJson:
-			fmt.Fprintln(l.stdout, JsonFormat(lg))
-		default:
-			fmt.Fprintln(l.stdout, Format(lg))
-		}
-		l.wg.Done()
+func logLocal(lg *log.Log) {
+	if l.conf.logJson {
+		fmt.Fprintln(l.stdout, JsonFormat(lg))
+		return
 	}
+	fmt.Fprintln(l.stdout, Format(lg))
 }
 
 // format log as:

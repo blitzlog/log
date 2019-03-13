@@ -21,11 +21,10 @@ func Flush() {
 		r := recover()
 		if r != nil {
 			stack := debug.Stack()
-			l.wg.Add(1)
-			l.logChannel <- &log.Log{
+			mux(&log.Log{
 				Timestamp: time.Now().UTC().UnixNano() / 1e6,
 				Raw:       fmt.Sprintf("%s\n%s", r, stack),
-			}
+			})
 		}
 	}
 

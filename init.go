@@ -17,13 +17,8 @@ func init() {
 	l.stdout = os.Stdout
 
 	// init channels
-	l.logChannel = make(chan *log.Log, 1000)
 	l.edgeChannel = make(chan *log.Log, 1000)
-	l.localChannel = make(chan *log.Log, 1000)
 	l.flushChannel = make(chan bool, 1)
-
-	go local() // start local service
-	go mux()   // start multiplexer
 
 	// TODO: enable configurable stdout redirect
 	//redirect() // redirect logs from stdout
@@ -35,9 +30,7 @@ type logging struct {
 	stdout       *os.File
 	errFile      *os.File
 	tags         *tags
-	logChannel   chan *log.Log // input log channel
 	edgeChannel  chan *log.Log // channel to push logs to edge
-	localChannel chan *log.Log // channel to publish logs locally
 	flushChannel chan bool     // channel to flush logs
 }
 
